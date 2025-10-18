@@ -6,6 +6,7 @@ Professional web-based presentation tool with dual-window mode, intelligent timi
 [![Made with SvelteKit](https://img.shields.io/badge/Made%20with-SvelteKit-FF3E00?logo=svelte)](https://kit.svelte.dev/)
 
 **[🚀 Try it Live](https://web-slide-presenter-five.vercel.app/)** 
+
 ---
 
 ## ⚡ Quick Start (5 Minutes)
@@ -23,16 +24,19 @@ Open http://localhost:5173
 
 ### Basic Usage
 
-1. **Load PDF**: Click "📁 Load PDF Presentation"
+1. **Load PDF**: Click "📁 Load PDF" or drag & drop a PDF file onto the preview area
 2. **Quick Timing**: Click "Auto-fill" → Enter duration (e.g., `30` minutes)
-3. **Open Audience View**: Click "Open Audience View" → Press `F` for fullscreen
-4. **Present**: Click "Start" → Use `→` or `Space` to advance
+3. **Open Audience View**: Click "👥 Audience" → Press `F` for fullscreen
+4. **Present**: Click "Start" → Use `→` / `Space` / navigation buttons to advance
 
 ### Pro Tips
 
+- **Drag & Drop**: Simply drag a PDF file onto the app to load it instantly
+- **Persistence**: Your presentation persists across page reloads automatically
 - **Pause & Adjust**: Click "Pause" during presentation to adjust timing on the fly
-- **Save Config**: Click "💾 Save Config" to save timing + notes for reuse
-- **Keyboard**: `→`/`Space` next, `←` previous, `Home` first, `End` last
+- **Save Config**: Click "💾 Save" to save timing + notes for reuse
+- **Navigation Buttons**: Use on-screen buttons for touch/mouse control
+- **Clear Data**: Click "🗑️ Clear All" to reset everything when starting fresh
 
 ---
 
@@ -63,10 +67,14 @@ Open http://localhost:5173
 - **Easy Sharing**: Share timing plans with collaborators
 
 ### 🎨 User Experience
+- **Drag & Drop Upload**: Drag PDF files directly onto the app to load them
+- **Navigation Buttons**: On-screen buttons for mouse/touch navigation (⏮️ ◀️ ▶️ ⏭️)
 - **Keyboard Navigation**: Full keyboard control (arrows, space, home, end)
-- **Responsive Design**: Adapts to different screen sizes
+- **Responsive Design**: Fully optimized for mobile, tablet, and desktop
+- **Persistent State**: Presentations automatically restore after page reload
 - **Progress Tracking**: Visual progress bar with slide counter
 - **Boundary Protection**: Can't navigate beyond first/last slide
+- **Clear All Data**: One-click button to reset all data and start fresh
 
 ### 📱 Progressive Web App (PWA)
 - **Installable**: Install as desktop/mobile app
@@ -84,9 +92,18 @@ Open http://localhost:5173
 ## 📖 Usage Guide
 
 ### 1. Load Your Presentation
-1. Click **"Load PDF Presentation"** button
-2. Select your PDF file
+
+**Option A: Click to Upload**
+1. Click **"📁 Load PDF"** button in the top toolbar
+2. Select your PDF file from the dialog
 3. Wait for slides to render (progress indicator shows status)
+
+**Option B: Drag & Drop (Recommended)**
+1. Drag your PDF file from your file explorer
+2. Drop it onto the slide preview area (highlighted in blue when dragging)
+3. Watch as the app processes your slides with a progress bar
+
+**Note**: Your presentation will automatically persist across page reloads, so you can close and reopen your browser without losing your slides.
 
 ### 2. Set Up Timing
 
@@ -111,24 +128,30 @@ Slide 5:  15 min  🔄 (auto)
 ```
 
 #### Save Your Configuration
-1. Click **"💾 Save Config"** button
+1. Click **"💾 Save"** button
 2. Downloads YAML file with timing and notes
-3. Reuse later with **"📂 Load Config"**
+3. Reuse later with **"📂 Config"** button
+
+#### Clear All Data
+Need to start fresh? Click **"🗑️ Clear All"** to remove:
+- All slides
+- Speaker notes
+- Timing configuration
+- Persistent state
 
 ### 3. Present
 
 #### Open Audience View
-1. Click **"Open Audience View"** button
+1. Click **"👥 Audience"** button
 2. Move window to second screen/projector
 3. Press `F` for fullscreen
 
 #### Start Presenting
 1. Click **"Start"** button to begin timer
-2. Navigate slides:
-   - `→` or `Space`: Next slide
-   - `←`: Previous slide  
-   - `Home`: First slide
-   - `End`: Last slide
+2. Navigate slides using either:
+   - **Keyboard**: `→` or `Space` (Next), `←` (Previous), `Home` (First), `End` (Last)
+   - **On-Screen Buttons**: ⏮️ (First), ◀️ Prev, Next ▶️, ⏭️ (Last)
+   - **Timing Overview**: Click any slide in the sidebar to jump directly to it
 
 #### Monitor Your Pacing
 - **⚠️ Slow down!** - More than 2 min ahead (orange)
@@ -194,7 +217,13 @@ Slide 5:  15 min  🔄 (auto)
 ### PDF Not Loading
 - Check file size (very large PDFs may take time)
 - Ensure file is a valid PDF
+- Try drag & drop instead of file dialog
 - Check browser console for errors
+
+### Presentation Not Persisting
+- Check if IndexedDB is enabled in your browser
+- Ensure you're not in private/incognito mode
+- Try clicking "💾 Save" to export configuration as backup
 
 ### Audience View Not Syncing
 - Ensure both windows are from same origin
@@ -208,28 +237,13 @@ Slide 5:  15 min  🔄 (auto)
 
 ### Storage Quota Exceeded
 - IndexedDB is used for large data
-- Clear browser data if needed
+- Click "🗑️ Clear All" to free up space
 - Check available storage in DevTools
 
----
-
-## 🤝 Contributing
-
-Contributions welcome! Please:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Test thoroughly
-5. Commit your changes (`git commit -m 'Add amazing feature'`)
-6. Push to the branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
-
----
-
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE) file for details
+### Mobile/Tablet Issues
+- App is fully responsive and should work on all devices
+- Use on-screen navigation buttons instead of keyboard
+- Rotate to landscape for better slide visibility
 
 ---
 
@@ -238,43 +252,3 @@ MIT License - see [LICENSE](LICENSE) file for details
 - Built with [SvelteKit](https://kit.svelte.dev/)
 - PDF rendering by [PDF.js](https://mozilla.github.io/pdf.js/)
 - Styled with [Tailwind CSS](https://tailwindcss.com/)
-
----
-
-## 🚢 Deployment
-
-### Quick Deploy to Vercel
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/glowingkitty/WebSlidePresenter)
-
-1. Click the button above or push to GitHub
-2. Import project in Vercel
-3. Deploy (configuration is automatic via `vercel.json`)
-
-### Other Platforms
-
-See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment guides for Netlify, static hosting, and self-hosting.
-
----
-
-## 💻 Development
-
-```bash
-cd app
-npm install         # Install dependencies
-npm run dev         # Start dev server
-npm run build       # Build for production
-npm run preview     # Preview production build
-```
-
----
-
-## 📞 Support
-
-- 🐛 [Report Issues](https://github.com/glowingkitty/WebSlidePresenter/issues)
-- 💡 [Request Features](https://github.com/glowingkitty/WebSlidePresenter/issues)
-- 📖 [Documentation](DEPLOYMENT.md)
-
----
-
-**Made with ❤️ for presenters who value timing and professionalism**

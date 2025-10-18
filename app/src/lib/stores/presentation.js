@@ -9,11 +9,11 @@
  * - pdfFileName: Name of the loaded PDF file for identification
  */
 
-import { writable, derived } from 'svelte/store';
+import { writable, derived, get } from 'svelte/store';
 
 // Core presentation state
 export const pdfDocument = writable(null);
-export const slides = writable([]);
+export const slides = writable(/** @type {string[]} */ ([]));
 export const currentSlide = writable(0);
 export const pdfFileName = writable('');
 
@@ -40,8 +40,7 @@ export function goToSlide(index) {
  */
 export function nextSlide() {
   currentSlide.update(current => {
-    let total;
-    totalSlides.subscribe(t => total = t)();
+    const total = get(totalSlides);
     return current < total - 1 ? current + 1 : current;
   });
 }
