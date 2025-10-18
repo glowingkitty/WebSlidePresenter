@@ -2,6 +2,18 @@
   "buildCommand": "cd app && npm install && npm run build",
   "outputDirectory": "app/build",
   "installCommand": "echo 'Skipping root install'",
-  "framework": null
+  "framework": null,
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/audience",
+      "destination": "/audience.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
 
