@@ -1,7 +1,23 @@
 {
-	"name": "app",
-	"private": true,
-	"version": "0.0.1",
+	"name": "webslidepresenter",
+	"version": "1.0.0",
+	"description": "Professional web-based presentation tool with dual-window mode, intelligent timing, and speaker notes",
+	"author": "Your Name",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/glowingkitty/WebSlidePresenter.git"
+	},
+	"keywords": [
+		"presentation",
+		"slides",
+		"pdf",
+		"presenter",
+		"timing",
+		"speaker-notes",
+		"svelte",
+		"pwa"
+	],
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",

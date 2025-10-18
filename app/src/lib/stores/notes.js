@@ -78,7 +78,7 @@ export function saveNotes(fileName) {
     notesData = notes;
   })();
   
-  saveToStorage(`presentpilot-notes-${fileName}`, notesData);
+  saveToStorage(`WebSlidePresenter-notes-${fileName}`, notesData);
 }
 
 /**
@@ -88,7 +88,7 @@ export function saveNotes(fileName) {
 export function loadNotes(fileName) {
   if (!fileName) return;
   
-  const notes = loadFromStorage(`presentpilot-notes-${fileName}`);
+  const notes = loadFromStorage(`WebSlidePresenter-notes-${fileName}`);
   if (notes) {
     speakerNotes.set(notes);
   }

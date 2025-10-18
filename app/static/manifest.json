@@ -1,6 +1,6 @@
 {
-  "name": "PresentPilot",
-  "short_name": "PresentPilot",
+  "name": "WebSlidePresenter",
+  "short_name": "WebSlidePresenter",
   "description": "Professional presentation tool with timing and dual-window support",
   "start_url": "/",
   "display": "standalone",

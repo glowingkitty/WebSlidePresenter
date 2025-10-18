@@ -1,5 +1,5 @@
 /**
- * Service Worker for PresentPilot
+ * Service Worker for WebSlidePresenter
  * 
  * Provides offline capability by caching:
  * - App shell (HTML, CSS, JS)
@@ -10,7 +10,7 @@
  * - Network-first for PDF files (too large to cache)
  */
 
-const CACHE_NAME = 'presentpilot-v1';
+const CACHE_NAME = 'WebSlidePresenter-v1';
 const ASSETS_TO_CACHE = [
   '/',
   '/audience',

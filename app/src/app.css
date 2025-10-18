@@ -9,7 +9,7 @@
   --color-toofast: #fb923c;
 }
 
-/* Global styles for PresentPilot */
+/* Global styles for WebSlidePresenter */
 @layer base {
   body {
     background-color: #111827; /* gray-900 */

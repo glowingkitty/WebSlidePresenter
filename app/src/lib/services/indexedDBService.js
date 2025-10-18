@@ -6,7 +6,7 @@
  * without exceeding localStorage/sessionStorage quota
  */
 
-const DB_NAME = 'presentpilot-db';
+const DB_NAME = 'WebSlidePresenter-db';
 const DB_VERSION = 1;
 const STORE_NAME = 'slides';
 

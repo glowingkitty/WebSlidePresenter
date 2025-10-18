@@ -20,7 +20,7 @@ let channel = null;
 export function initChannel() {
   if (!channel) {
     try {
-      channel = new BroadcastChannel('presentpilot-sync');
+      channel = new BroadcastChannel('WebSlidePresenter-sync');
       console.log('BroadcastChannel initialized');
     } catch (error) {
       console.error('Failed to initialize BroadcastChannel:', error);

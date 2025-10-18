@@ -97,6 +97,6 @@ export function simpleHash(str) {
  */
 export function getPdfStorageKey(fileName, type) {
   const hash = simpleHash(fileName);
-  return `presentpilot-${type}-${hash}`;
+  return `WebSlidePresenter-${type}-${hash}`;
 }
 

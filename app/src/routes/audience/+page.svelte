@@ -136,7 +136,7 @@
 </script>
 
 <svelte:head>
-  <title>PresentPilot - Audience View</title>
+  <title>WebSlidePresenter - Audience View</title>
 </svelte:head>
 
 <div class="h-screen w-screen bg-black flex items-center justify-center overflow-hidden">
@@ -163,7 +163,7 @@
   {:else}
     <!-- Waiting for presentation -->
     <div class="text-center">
-      <div class="text-white text-2xl mb-4">🧭 PresentPilot</div>
+      <div class="text-white text-2xl mb-4">🧭 WebSlidePresenter</div>
       <div class="text-gray-400">Waiting for presentation...</div>
       <div class="text-gray-500 text-sm mt-2">
         Load a PDF in the presenter view to begin
