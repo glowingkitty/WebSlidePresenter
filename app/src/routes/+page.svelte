@@ -499,12 +499,84 @@
                 </div>
               </div>
             {:else if $totalSlides === 0}
-              <!-- Empty state with drop zone -->
+              <!-- Empty state with drop zone and app explainer -->
               <div class="text-center cursor-pointer hover:bg-gray-700/50 rounded-lg p-4 sm:p-8 transition-colors w-full h-full flex flex-col items-center justify-center">
                 <div class="text-4xl sm:text-6xl mb-4">📄</div>
                 <div class="text-base sm:text-lg text-gray-300 mb-2">Select or Drop PDF</div>
-                <div class="text-xs sm:text-sm text-gray-500">
+                <div class="text-xs sm:text-sm text-gray-500 mb-6">
                   Click here or drag & drop a PDF file to start
+                </div>
+                
+                <!-- App features explainer -->
+                <div class="max-w-2xl mx-auto mt-4 p-4 sm:p-6 bg-gray-800/50 rounded-lg border border-gray-700">
+                  <h2 class="text-lg sm:text-xl font-semibold text-white mb-4">🎯 About WebSlidePresenter</h2>
+                  <div class="text-left space-y-3 text-xs sm:text-sm text-gray-300">
+                    <p class="leading-relaxed">
+                      A modern, web-based presentation tool that turns your PDFs into interactive presentations.
+                    </p>
+                    
+                    <!-- Privacy highlight -->
+                    <div class="bg-green-900/30 border border-green-700/50 rounded p-3 my-3">
+                      <div class="flex items-start gap-2">
+                        <span class="text-lg">🔒</span>
+                        <div>
+                          <div class="font-semibold text-green-300">100% Private & Local</div>
+                          <div class="text-xs text-gray-300 mt-1">
+                            Everything runs locally on your device. No files uploaded, no tracking, no external services. Your presentations stay private.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+                      <!-- Core features -->
+                      <div class="bg-gray-900/50 p-3 rounded border border-gray-700/50">
+                        <div class="flex items-start gap-2">
+                          <span class="text-lg">👥</span>
+                          <div>
+                            <div class="font-semibold text-blue-300">Presenter & Audience Views</div>
+                            <div class="text-xs text-gray-400 mt-1">Separate windows for presenter controls and audience display</div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="bg-gray-900/50 p-3 rounded border border-gray-700/50">
+                        <div class="flex items-start gap-2">
+                          <span class="text-lg">⏱️</span>
+                          <div>
+                            <div class="font-semibold text-green-300">Smart Timing</div>
+                            <div class="text-xs text-gray-400 mt-1">Set target times and track your pace in real-time</div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="bg-gray-900/50 p-3 rounded border border-gray-700/50">
+                        <div class="flex items-start gap-2">
+                          <span class="text-lg">📝</span>
+                          <div>
+                            <div class="font-semibold text-yellow-300">Speaker Notes</div>
+                            <div class="text-xs text-gray-400 mt-1">Add and view notes for each slide during your presentation</div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="bg-gray-900/50 p-3 rounded border border-gray-700/50">
+                        <div class="flex items-start gap-2">
+                          <span class="text-lg">💾</span>
+                          <div>
+                            <div class="font-semibold text-purple-300">Auto-Save</div>
+                            <div class="text-xs text-gray-400 mt-1">Your slides and progress are saved automatically</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="text-center pt-3 border-t border-gray-700 mt-4">
+                      <p class="text-xs text-gray-400">
+                        ⌨️ Full keyboard navigation • 📱 Mobile-friendly • 🎨 Modern UI
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             {:else}
