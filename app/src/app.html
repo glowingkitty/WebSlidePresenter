@@ -18,20 +18,21 @@
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">%sveltekit.body%</div>
 		
-		<!-- Service Worker Registration -->
-		<script>
-			if ('serviceWorker' in navigator) {
-				window.addEventListener('load', () => {
-					navigator.serviceWorker.register('/sw.js').then(
-						(registration) => {
-							console.log('Service Worker registered:', registration.scope);
-						},
-						(error) => {
-							console.error('Service Worker registration failed:', error);
-						}
-					);
-				});
-			}
-		</script>
+	<!-- Service Worker Registration (only in production) -->
+	<script>
+		// Only register service worker in production (not in dev mode)
+		if ('serviceWorker' in navigator && import.meta.env.PROD) {
+			window.addEventListener('load', () => {
+				navigator.serviceWorker.register('/sw.js').then(
+					(registration) => {
+						console.log('Service Worker registered:', registration.scope);
+					},
+					(error) => {
+						console.error('Service Worker registration failed:', error);
+					}
+				);
+			});
+		}
+	</script>
 	</body>
 </html>

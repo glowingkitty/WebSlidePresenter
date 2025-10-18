@@ -92,14 +92,39 @@ export function toggleTimer() {
  * Set target time for a specific slide (creates a milestone)
  * @param {number} slideIndex - Slide index (0-based)
  * @param {number} minutes - Target start time in minutes (null to remove)
+ * @param {boolean} autoAdjust - If true, automatically adjust subsequent slides if they're lower than the new time (default: true)
  */
-export function setTargetTime(slideIndex, minutes) {
+export function setTargetTime(slideIndex, minutes, autoAdjust = true) {
   explicitTargetTimes.update(times => {
     const newTimes = { ...times };
     if (minutes === null || minutes === undefined || minutes === '') {
       delete newTimes[slideIndex];
     } else {
       newTimes[slideIndex] = minutes;
+      
+      // Auto-adjust subsequent explicit times if they're lower than the new time
+      if (autoAdjust && minutes > 0) {
+        const sortedIndices = Object.keys(newTimes)
+          .map(Number)
+          .filter(idx => idx > slideIndex) // Only check slides after current one
+          .sort((a, b) => a - b);
+        
+        // Track the minimum allowed time for each subsequent slide
+        let minAllowedTime = minutes;
+        
+        for (const idx of sortedIndices) {
+          const existingTime = newTimes[idx];
+          
+          // If the existing time is lower than the minimum allowed, update it
+          if (existingTime < minAllowedTime) {
+            console.debug(`Auto-adjusting slide ${idx + 1} from ${existingTime} to ${minAllowedTime} minutes`);
+            newTimes[idx] = minAllowedTime;
+          }
+          
+          // Update minimum for next iteration
+          minAllowedTime = Math.max(minAllowedTime, newTimes[idx]);
+        }
+      }
     }
     return newTimes;
   });
