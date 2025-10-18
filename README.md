@@ -5,7 +5,7 @@ Professional web-based presentation tool with dual-window mode, intelligent timi
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Made with SvelteKit](https://img.shields.io/badge/Made%20with-SvelteKit-FF3E00?logo=svelte)](https://kit.svelte.dev/)
 
-<!-- **[🚀 Try it Live](https://webslidepresenter.vercel.app)**  -->
+**[🚀 Try it Live](https://web-slide-presenter-five.vercel.app/)** 
 ---
 
 ## ⚡ Quick Start (5 Minutes)
