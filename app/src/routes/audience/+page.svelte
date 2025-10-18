@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   /**
    * Audience View
    * 
@@ -15,22 +15,24 @@
   import PDFSlide from '$lib/components/PDFSlide.svelte';
   
   // Local state for audience view
-  let slides = writable([]);
+  let slides = writable<string[]>([]);
   let currentSlide = writable(0);
   let isFullscreen = false;
   
   // Cleanup function for broadcast listener
-  let cleanupBroadcast = null;
+  let cleanupBroadcast: (() => void) | null = null;
   
   /**
    * Handle messages from presenter view
    */
-  function handleBroadcastMessage(message) {
+  function handleBroadcastMessage(message: { type: string; slideIndex?: number; totalSlides?: number }) {
     console.log('Audience view received:', message);
     
     switch (message.type) {
       case 'SLIDE_CHANGE':
-        currentSlide.set(message.slideIndex);
+        if (message.slideIndex !== undefined) {
+          currentSlide.set(message.slideIndex);
+        }
         break;
       
       case 'PRESENTATION_LOADED':
@@ -66,7 +68,7 @@
   /**
    * Handle keyboard events
    */
-  function handleKeyPress(event) {
+  function handleKeyPress(event: KeyboardEvent) {
     if (event.key === 'f' || event.key === 'F') {
       event.preventDefault();
       toggleFullscreen();
@@ -97,7 +99,7 @@
     console.log('Audience view mounted');
     
     // Setup broadcast listener
-    cleanupBroadcast = onMessage(handleBroadcastMessage);
+    cleanupBroadcast = onMessage(handleBroadcastMessage) as () => void;
     
     // Setup keyboard listener
     window.addEventListener('keydown', handleKeyPress);

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   /**
    * Presenter View (Main Page)
    * 
@@ -17,20 +17,21 @@
   import { isRunning, startTimer } from '$lib/stores/timing.js';
   import { loadPDF } from '$lib/services/pdfLoader.js';
   import { sendSlideChange, sendPresentationLoaded } from '$lib/services/broadcast.js';
-  import { readYAMLFile } from '$lib/services/yamlService.js';
+  import { exportConfigToYAML, downloadYAML, readYAMLFile } from '$lib/services/yamlService.js';
   import { setTargetTimes } from '$lib/stores/timing.js';
   import { saveSlides } from '$lib/services/indexedDBService.js';
+  import { speakerNotes } from '$lib/stores/notes.js';
+  import { explicitTargetTimes, targetTimes } from '$lib/stores/timing.js';
+  import { isExplicitTime } from '$lib/services/timingInterpolation.js';
   
   import PDFSlide from '$lib/components/PDFSlide.svelte';
   import Timer from '$lib/components/Timer.svelte';
   import NotesEditor from '$lib/components/NotesEditor.svelte';
   import ProgressBar from '$lib/components/ProgressBar.svelte';
-  import TimingSetupModal from '$lib/components/TimingSetupModal.svelte';
   
   // UI state
   let isLoadingPDF = false;
   let loadingProgress = { current: 0, total: 0 };
-  let isTimingModalOpen = false;
   let showKeyboardShortcuts = false;
   
   // Reactive: next slide index
@@ -39,8 +40,9 @@
   /**
    * Handle PDF file upload
    */
-  async function handlePDFUpload(event) {
-    const file = event.target.files?.[0];
+  async function handlePDFUpload(event: Event) {
+    const target = event.target as HTMLInputElement;
+    const file = target.files?.[0];
     if (!file) return;
     
     try {
@@ -50,14 +52,14 @@
       console.log('Loading PDF:', file.name);
       
       // Load PDF and render slides
-      const result = await loadPDF(file, (current, total) => {
+      const result = await loadPDF(file, (current: number, total: number) => {
         loadingProgress = { current, total };
       });
       
       // Update stores
       pdfDocument.set(result.document);
       slides.set(result.slides);
-      pdfFileName.set(result.fileName);
+      pdfFileName.set((result as any).fileName);
       currentSlide.set(0);
       
       console.log(`PDF loaded: ${result.slides.length} slides`);
@@ -80,7 +82,8 @@
       isLoadingPDF = false;
     } catch (error) {
       console.error('Failed to load PDF:', error);
-      alert(`Failed to load PDF: ${error.message}`);
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      alert(`Failed to load PDF: ${message}`);
       isLoadingPDF = false;
     }
   }
@@ -88,19 +91,74 @@
   /**
    * Try to auto-load YAML file with same name as PDF
    */
-  async function tryAutoLoadYAML(pdfName) {
+  async function tryAutoLoadYAML(pdfName: string) {
     // Create a file input to check if YAML exists
     // Note: For security, we can't directly check file existence
     // User would need to select it manually
-    console.log('To load timing, use "Setup Timing" > "Import YAML"');
+    console.log('To load timing, use "Load Config" button');
+  }
+  
+  /**
+   * Save config (timing + notes) to file
+   */
+  function saveConfig() {
+    try {
+      const yamlString = exportConfigToYAML($explicitTargetTimes, $speakerNotes, $pdfFileName);
+      const baseFileName = $pdfFileName.replace(/\.pdf$/i, '');
+      downloadYAML(yamlString, baseFileName);
+      console.log('Config saved');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      alert(`Failed to save config: ${message}`);
+    }
+  }
+  
+  /**
+   * Load config (timing + notes) from file
+   */
+  async function loadConfig() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.yml,.yaml';
+    
+    input.onchange = async (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      const file = target.files?.[0];
+      if (!file) return;
+      
+      try {
+        const data = await readYAMLFile(file);
+        
+        // Load timing
+        if ('targetTimes' in data && data.targetTimes) {
+          setTargetTimes(data.targetTimes as Record<number, number>);
+          console.log('Timing loaded');
+        }
+        
+        // Load notes
+        if ('speakerNotes' in data && data.speakerNotes) {
+          speakerNotes.set(data.speakerNotes as Record<number, string>);
+          const noteCount = Object.keys(data.speakerNotes as Record<number, string>).length;
+          console.log('Notes loaded:', noteCount, 'slides');
+        }
+        
+        alert('Config loaded successfully!');
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        alert(`Failed to load config: ${message}`);
+      }
+    };
+    
+    input.click();
   }
   
   /**
    * Handle keyboard navigation
    */
-  function handleKeyPress(event) {
+  function handleKeyPress(event: KeyboardEvent) {
     // Ignore if user is typing in an input/textarea
-    if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+    const target = event.target as HTMLElement;
+    if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) {
       return;
     }
     
@@ -108,30 +166,32 @@
       case 'ArrowRight':
       case ' ':
         event.preventDefault();
-        nextSlide();
-        sendSlideChange($currentSlide + 1);
-        // Auto-start timer on first navigation
-        if (!$isRunning && $currentSlide === 0) {
-          startTimer();
+        // Only navigate if not at end
+        if ($currentSlide < $totalSlides - 1) {
+          nextSlide();
+          // Auto-start timer on first navigation
+          if (!$isRunning && $currentSlide === 0) {
+            startTimer();
+          }
         }
         break;
       
       case 'ArrowLeft':
         event.preventDefault();
-        previousSlide();
-        sendSlideChange($currentSlide - 1);
+        // Only navigate if not at beginning
+        if ($currentSlide > 0) {
+          previousSlide();
+        }
         break;
       
       case 'Home':
         event.preventDefault();
         firstSlide();
-        sendSlideChange(0);
         break;
       
       case 'End':
         event.preventDefault();
         lastSlide();
-        sendSlideChange($totalSlides - 1);
         break;
       
       case '?':
@@ -151,9 +211,12 @@
   
   /**
    * Update broadcast when slide changes
+   * React to slide changes and broadcast to audience
    */
-  $: if ($currentSlide >= 0) {
-    sendSlideChange($currentSlide);
+  $: {
+    if ($currentSlide >= 0 && $totalSlides > 0) {
+      sendSlideChange($currentSlide);
+    }
   }
   
   // Setup keyboard listeners
@@ -204,7 +267,7 @@
       <!-- Top bar (spans full width) -->
       <div class="col-span-12 space-y-2">
         <div class="flex items-center justify-between">
-          <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2">
             <h1 class="text-xl font-bold text-white">🧭 PresentPilot</h1>
             <label class="px-3 py-1 bg-gray-700 hover:bg-gray-600 text-sm text-white rounded cursor-pointer transition-colors">
               <input
@@ -216,10 +279,18 @@
               Change PDF
             </label>
             <button
-              on:click={() => isTimingModalOpen = true}
+              on:click={loadConfig}
               class="px-3 py-1 bg-gray-700 hover:bg-gray-600 text-sm text-white rounded transition-colors"
+              title="Load timing and notes from file"
             >
-              Setup Timing
+              📂 Load Config
+            </button>
+            <button
+              on:click={saveConfig}
+              class="px-3 py-1 bg-gray-700 hover:bg-gray-600 text-sm text-white rounded transition-colors"
+              title="Save timing and notes to file"
+            >
+              💾 Save Config
             </button>
           </div>
           
@@ -297,29 +368,60 @@
         <!-- File info -->
         <div class="bg-gray-800 rounded-lg p-4 text-sm">
           <h3 class="font-semibold text-gray-300 mb-2">Presentation Info</h3>
-          <div class="space-y-1 text-gray-400 text-xs">
+          <div class="space-y-1 text-gray-400 text-xs mb-3">
             <div class="truncate" title={$pdfFileName}>
               <span class="text-gray-500">File:</span> {$pdfFileName}
             </div>
             <div>
               <span class="text-gray-500">Slides:</span> {$totalSlides}
             </div>
+            {#if Object.keys($targetTimes).length > 0}
+              <div>
+                <span class="text-gray-500">Total Duration:</span> {Math.round(($targetTimes as Record<number, number>)[$totalSlides - 1] || 0)} min
+              </div>
+            {/if}
           </div>
+          
+          {#if Object.keys($targetTimes).length > 0}
+            <div class="border-t border-gray-700 pt-3">
+              <h4 class="font-semibold text-gray-300 mb-2 text-xs">Timing Overview</h4>
+              <div class="max-h-48 overflow-y-auto scrollbar-thin space-y-1">
+                {#each Array($totalSlides) as _, i}
+                  {@const targetTime = ($targetTimes as Record<number, number>)[i]}
+                  {@const isExplicit = isExplicitTime(i, $explicitTargetTimes)}
+                  {@const isCurrent = i === $currentSlide}
+                  {#if targetTime !== undefined}
+                    <div 
+                      class="flex justify-between text-xs px-2 py-1 rounded transition-colors {isCurrent ? 'bg-blue-600/30 text-blue-200' : 'text-gray-400 hover:bg-gray-700/50'}"
+                    >
+                      <span class="flex items-center gap-1">
+                        {isExplicit ? '📍' : '🔄'}
+                        <span class={isCurrent ? 'font-semibold' : ''}>Slide {i + 1}</span>
+                      </span>
+                      <span class={isCurrent ? 'font-semibold' : ''}>{Math.round(targetTime)} min</span>
+                    </div>
+                  {/if}
+                {/each}
+              </div>
+            </div>
+          {/if}
         </div>
       </div>
     </div>
   {/if}
 </div>
 
-<!-- Timing setup modal -->
-<TimingSetupModal bind:isOpen={isTimingModalOpen} />
-
 <!-- Keyboard shortcuts overlay -->
 {#if showKeyboardShortcuts}
+  <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions a11y-interactive-supports-focus -->
   <div
     class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
     on:click={() => showKeyboardShortcuts = false}
+    role="dialog"
+    aria-modal="true"
+    tabindex="-1"
   >
+    <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
     <div class="bg-gray-800 rounded-lg p-6 max-w-md" on:click|stopPropagation>
       <h2 class="text-xl font-bold text-white mb-4">Keyboard Shortcuts</h2>
       <div class="space-y-3 text-sm">

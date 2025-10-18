@@ -29,7 +29,7 @@
     <div
       class="h-full {barColor} transition-all duration-300 ease-out"
       style="width: {progress}%"
-    />
+    ></div>
   </div>
   <div class="flex justify-between text-xs text-gray-400 mt-1">
     <span>Slide {$currentSlide + 1} / {$totalSlides}</span>

@@ -56,7 +56,7 @@
     on:blur={handleBlur}
     placeholder="Add your speaker notes here..."
     class="w-full h-40 p-3 bg-gray-800 border border-gray-700 rounded text-gray-100 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none scrollbar-thin"
-  />
+  ></textarea>
   <div class="text-xs text-gray-500 mt-1">
     Notes auto-save as you type
   </div>
