@@ -1,0 +1,36 @@
+/* Tailwind CSS v4 import */
+@import "tailwindcss";
+
+/* Custom theme colors for pacing indicators */
+@theme {
+  --color-ahead: #22c55e;
+  --color-ontime: #eab308;
+  --color-behind: #ef4444;
+  --color-toofast: #fb923c;
+}
+
+/* Global styles for PresentPilot */
+@layer base {
+  body {
+    background-color: #111827; /* gray-900 */
+    color: #f3f4f6; /* gray-100 */
+  }
+}
+
+/* Custom scrollbar styling */
+@layer utilities {
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background-color: #1f2937; /* gray-800 */
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #4b5563; /* gray-600 */
+    border-radius: 0.25rem;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: #6b7280; /* gray-500 */
+  }
+}
+
